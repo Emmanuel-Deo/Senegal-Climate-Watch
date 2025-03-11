@@ -1,38 +1,115 @@
-.App {
-  text-align: center;
+.App{
+
+ 
+  height: 98vh;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-top: 2vh;
+
+  
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.navbar{
+height: 7vh;
+border-radius: 10px;
+background-color:rgb(238, 238, 238);
+
+
+}
+.container{
+  
+  height: 89vh;
+  display: flex;
+  gap: 20px;
+  margin-top: 2vh;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+
+.menu-panel{
+  
+  width: 20%;
+  gap: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+  
+}
+.map-canvas{
+  background-color: rgb(238, 238, 238);
+  width: 60%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+
 }
 
-.App-link {
-  color: #61dafb;
+
+
+.area-selector{
+  background-color:rgb(238, 238, 238);
+  height: 8%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.area-preview{
+
+  background-color:rgb(238, 238, 238);
+  height: 40%;
+
+
+}
+
+.indicator-selector{
+  background-color:rgb(238, 238, 238);
+  height: 50%;
+
+}
+
+.analysis-panel{
+
+  display: flex;
+  flex-direction: column;
+  width: 27%;
+  gap: 10px;
+
+}
+
+.analysis-top{
+
+background-color:rgb(238, 238, 238);
+height: 70%;
+border-top-right-radius: 10px;
+border-top-left-radius: 10px;
+width: 100%;
+align-items: center;
+overflow: hidden;
+
+}
+
+.analysis-bottom{
+  background-color:rgb(238, 238, 238);
+  height: 30%;
+  width: 100%;
+}
+
+.map-time {
+  position: absolute;
+
+  width: 30%;
+  height: 4%;
+  bottom: 5px;
+  left: 37%;
+  transform: translateX(-50%);
+  background:rgb(238, 238, 238, 0.5);
+  color: rgb(209, 61, 61);
+  padding: 8px 15px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+
+  z-index: 1000;
 }

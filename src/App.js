@@ -1,23 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import NavBar from './components/NavBar';
+import MenuPanel from './components/MenuPanel';
+import MapCanvas from './components/MapCanvas';
+import AnalysisPanel from './components/AnalysisPanel';
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+      <NavBar/>
+     
+      <div className="container">
+
+      
+      <MenuPanel/>
+      <MapCanvas/>
+      <AnalysisPanel/>
+      </div>
+      {/* <BasicMap/>
+      <NDVIChart/> */}
     </div>
   );
 }
