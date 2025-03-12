@@ -1,28 +1,51 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, WMSTileLayer,Polygon } from "react-leaflet";
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, WMSTileLayer,GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import MapControls from './MapControls';
+import wellknown from 'wellknown';
 
-const position = [0.60, 39.80];
+const position = [14.50046465750006, -14.438181045999954];
 
-const polygonCoords = [
-  [position[0] - 0.05, position[1] - 0.06], // Bottom-left
-  [position[0] - 0.02, position[1] + 0.05], // Bottom-right
-  [position[0] + 0.04, position[1] + 0.02], // Mid-right
-  [position[0] + 0.03, position[1] - 0.04], // Mid-bottom
-  [position[0] + 0.01, position[1] - 0.07], // Bottom-tip
-  [position[0] - 0.05, position[1] - 0.06], // Closing the polygon
-];
+const boundaryStyle = {
+  color: "#007BFF", // Blue outline
+  weight: 0.7,
+  opacity: 1,
+  fillColor: "#90CAF9", // Light blue fill
+  fillOpacity: 0.4,
+};
 
 
 export default function MapCanvas() {
-  const [dataset, setDataset] = useState('ndvi');
-  const [year, setYear] = useState('2010');
-  const [month, setMonth] = useState('01');
+  const [geoJsonData, setGeoJsonData] = useState(null);
+  const [wktPolygon, setWktPolygon] = useState("")
+  
+  useEffect(() => {
+    fetch('/level_03.geojson')
+      .then(response => response.json())
+      .then(data => {
+        setGeoJsonData(data);
+  
+        // Convert first polygon to WKT (modify as needed)
+        if (data.features.length > 0) {
+          const wktPolygon = wellknown.stringify(data.features[0].geometry);
+          setWktPolygon(wktPolygon);
+          console.log(wktPolygon )
+        }
+      })
+      .catch(error => console.error("Error loading GeoJSON:", error));
+  }, []);
+
+
+
+
+  const [dataset, setDataset] = useState('NDVI');
+  const [frequency, setFrequency] = useState('MONTHLY');
+  const [year, setYear] = useState('2001');
+  const [month, setMonth] = useState('9');
   const [layerKey, setLayerKey] = useState(0); // This will force the layer to reload
 
   const fetchData = () => {
-    console.log(`Fetching data for: ${dataset}_${year}_${month}`);
+    console.log(`Fetching data for: ${dataset}_${frequency}_${year}_${month}`);
     setLayerKey((prevKey) => prevKey + 1); // Force WMSTileLayer to refresh
   };
 
@@ -31,26 +54,24 @@ export default function MapCanvas() {
       {/* Controls with Fetch Button */}
       <MapControls year={year} setYear={setYear} month={month} setMonth={setMonth} fetchData={fetchData} />
 
-      <MapContainer center={position} zoom={7} style={{ height: "100%", width: "100%" }}>
+      <MapContainer center={position} zoom={7} style={{ height: "100%", width: "100%" , borderRadius: "10px 10px 0px 0px"}}>
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+        
 
         {/* GeoServer WMS Layer */}
         <WMSTileLayer
             key={layerKey} 
             url="http://localhost:8080/geoserver/demo/wms?"
-            layers={`demo:${dataset}_${year}_${month}`}
+            layers={`demo:${dataset}_${frequency}_${year}_${month}`}
             format="image/png"
             transparent={true}
             attribution="&copy; GeoServer WMS"
             version="1.1.0"
             styles="ndvi"
+           
         />
 
-      <Polygon
-        pathOptions={{ color: "red", fillColor: "orange", fillOpacity: 0.5 }}
-        positions={polygonCoords}
-      />
-
+        {/* {geoJsonData && <GeoJSON data={geoJsonData} style={boundaryStyle} />} */}
         
       </MapContainer>
 
