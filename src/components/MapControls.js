@@ -3,7 +3,7 @@ import React from "react";
 export default function MapControls({ year, setYear, month, setMonth, fetchData }) {
   // Generate years from 2000 to the current year
   const years = Array.from({ length: new Date().getFullYear() - 1999 }, (_, i) => (2000 + i).toString());
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, ''));
 
   return (
     <div className="controls">
