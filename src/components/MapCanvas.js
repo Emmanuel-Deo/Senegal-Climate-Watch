@@ -16,6 +16,8 @@ const boundaryStyle = {
 
 export default function MapCanvas() {
   const [geoJsonData, setGeoJsonData] = useState(null); // State to store GeoJSON data
+  const [opacity, setOpacity] = useState(1.0);
+
 
   // Load GeoJSON from the public folder when the component mounts
   useEffect(() => {
@@ -39,8 +41,15 @@ export default function MapCanvas() {
   const [dataset, setDataset] = useState("NDVI");
   const [frequency, setFrequency] = useState("MONTHLY");
   const [year, setYear] = useState("2003");
-  const [month, setMonth] = useState("1");
+  const [month, setMonth] = useState("12");
   const [layerKey, setLayerKey] = useState(0); // This will force the layer to reload
+
+  const baseMaps = {
+    osm: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    arcgis: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    opentopomap: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  };
+
 
   const fetchData = () => {
     console.log(`Fetching data for: ${aoi}_${dataset}_${year}_${frequency}_${month}`);
@@ -49,15 +58,7 @@ export default function MapCanvas() {
 
   return (
     <div className="map-canvas">
-      {/* Controls with Fetch Button */}
-      <MapControls
-        year={year}
-        setYear={setYear}
-        month={month}
-        setMonth={setMonth}
-        fetchData={fetchData}
-      />
-
+  
       <MapContainer
         center={position}
         zoom={7}
@@ -65,17 +66,24 @@ export default function MapCanvas() {
       >
         <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
 
-        {/* GeoServer WMS Layer */}
+
+        GeoServer WMS Layer
         <WMSTileLayer
           key={layerKey}
           url="http://localhost:8080/geoserver/demo/wms?"
           layers={`demo:${aoi}_${dataset}_${year}_${frequency}_${month}`}
           format="image/png"
+          srs="EPSG:4326"
           transparent={true}
+          opacity={opacity} // Apply opacity dynamically
           attribution="&copy; GeoServer WMS"
-          version="1.1.0"
+          version="1.0"
           styles="ndvi"
         />
+
+        
+
+        
 
         {/* Render boundaries if GeoJSON is available */}
         {geoJsonData && <GeoJSON data={geoJsonData} style={boundaryStyle}/>}
@@ -83,8 +91,52 @@ export default function MapCanvas() {
 
       {/* Display Selected Time */}
       <div className="map-time">
-        {dataset} {year} {month}
+        <MapControls
+        year={year}
+        setYear={setYear}
+        month={month}
+        setMonth={setMonth}
+        fetchData={fetchData}
+      />
       </div>
+
+
+      {/* Opacity Slider */}
+      <div className="opacity-slider">
+        <label>Opacity: {Math.round(opacity * 100)}%</label>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value={opacity}
+          onChange={(e) => setOpacity(parseFloat(e.target.value))}
+        />
+      </div>
+
+         {/* Legend Container */}
+         <div className="map-legend">
+            <h4>NDVI Legend</h4>
+            <div className="legend-item">
+              <span className="legend-color" style={{ background: "#d73027" }}></span> Low NDVI (-1 to 0)
+            </div>
+            <div className="legend-item">
+              <span className="legend-color" style={{ background: "#f46d43" }}></span> Moderate NDVI (0 to 0.2)
+            </div>
+            <div className="legend-item">
+              <span className="legend-color" style={{ background: "#fee08b" }}></span> Medium NDVI (0.2 to 0.4)
+            </div>
+            <div className="legend-item">
+              <span className="legend-color" style={{ background: "#66bd63" }}></span> High NDVI (0.4 to 0.6)
+            </div>
+            <div className="legend-item">
+              <span className="legend-color" style={{ background: "#1a9850" }}></span> Very High NDVI (0.6 to 1)
+            </div>
+         </div>
+
+
+
+
     </div>
   );
 }

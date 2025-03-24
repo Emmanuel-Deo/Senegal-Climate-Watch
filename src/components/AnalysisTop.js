@@ -1,5 +1,5 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,ReferenceLine , ResponsiveContainer } from "recharts";
 
 // Original dataset
 const rawData = {
@@ -224,6 +224,9 @@ export default function AnalysisTop() {
           <YAxis label={{ value: "Mean Values", angle: -90, position: "Left", fontSize: 12, fontWeight: "bold" }} />
           <Tooltip />
           <Legend />
+             
+          {/* Highlight April with a Reference Line */}
+          <ReferenceLine x="Apr" stroke="red" strokeDasharray="3 3" label={{ value: "April", position: "top", fill: "red" }} />
 
           {/* Mean Lines */}
           <Line type="monotone" dataKey="mean" stroke="#3385FF" strokeWidth={2} dot={{ r: 3 }} name="Mean (Raw)" />

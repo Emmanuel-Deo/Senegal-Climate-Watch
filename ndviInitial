@@ -35,3 +35,14 @@
     </sld:UserStyle>
   </UserLayer>
 </StyledLayerDescriptor>
+
+
+
+http://66.42.65.87:8080/geoserver/LANDSAT_NDVI_WET/wms?service=WMS
+&version=1.1.0
+&request=GetMap
+&layers=LANDSAT_NDVI_WET%3A2018
+&bbox=13.875377878510129%2C-26.520063817776517%2C36.47878705752554%2C-8.962491589660463
+&width=768
+&height=596
+&srs=EPSG%3A4326&styles=&format=image%2Fpng
