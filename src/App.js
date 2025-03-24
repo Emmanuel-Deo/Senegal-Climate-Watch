@@ -11,9 +11,8 @@ function App() {
     <div className="App">
       
       <NavBar/>
-     
+      
       <div className="container">
-
       
       <MenuPanel/>
       <MapCanvas/>

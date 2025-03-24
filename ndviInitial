@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:sld="http://www.opengis.net/sld" version="1.0.0" xmlns:gml="http://www.opengis.net/gml">
+  <UserLayer>
+    <sld:LayerFeatureConstraints>
+      <sld:FeatureTypeConstraint/>
+    </sld:LayerFeatureConstraints>
+    <sld:UserStyle>
+      <sld:Name>ndvi_monthly_mean_2006_4</sld:Name>
+      <sld:FeatureTypeStyle>
+        <sld:Rule>
+          <sld:RasterSymbolizer>
+            <sld:ChannelSelection>
+              <sld:GrayChannel>
+                <sld:SourceChannelName>1</sld:SourceChannelName>
+              </sld:GrayChannel>
+            </sld:ChannelSelection>
+            <sld:ColorMap type="ramp">
+              <!-- NoData value (-9999) set to transparent -->
+              <sld:ColorMapEntry color="#000000" quantity="-9999" label="No Data" opacity="0"/>
+              
+              <sld:ColorMapEntry color="#d7191c" quantity="-0.8" label="&lt; - 0.8"/>
+              <sld:ColorMapEntry color="#e85b3b" quantity="-0.6" label="-0.8 - -0.6"/>
+              <sld:ColorMapEntry color="#f99d59" quantity="-0.4" label="-0.6 - -0.4"/>
+              <sld:ColorMapEntry color="#fec981" quantity="-0.2" label="-0.4 - -0.2"/>
+              <sld:ColorMapEntry color="#ffedab" quantity="0" label="-0.2 - 0"/>
+              <sld:ColorMapEntry color="#ebf7ad" quantity="0.2" label="0 - 0.2"/>
+              <sld:ColorMapEntry color="#c4e687" quantity="0.4" label="0.2 - 0.4"/>
+              <sld:ColorMapEntry color="#96d265" quantity="0.6" label="0.4 - 0.8"/>
+              <sld:ColorMapEntry color="#58b453" quantity="0.8" label="0.6 - 0.8"/>
+              <sld:ColorMapEntry color="#1a9641" quantity="1" label="0.8 - 1.0"/>
+            </sld:ColorMap>
+          </sld:RasterSymbolizer>
+        </sld:Rule>
+      </sld:FeatureTypeStyle>
+    </sld:UserStyle>
+  </UserLayer>
+</StyledLayerDescriptor>

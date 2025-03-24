@@ -15,24 +15,25 @@ const boundaryStyle = {
 };
 
 export default function MapCanvas() {
-  const [geoJsonData, setGeoJsonData] = useState(null);
-  const [wktPolygon, setWktPolygon] = useState("");
+  const [geoJsonData, setGeoJsonData] = useState(null); // State to store GeoJSON data
 
+  // Load GeoJSON from the public folder when the component mounts
   useEffect(() => {
-    fetch("/level_03.geojson")
-      .then((response) => response.json())
-      .then((data) => {
-        setGeoJsonData(data);
-
-        // Convert first polygon to WKT (modify as needed)
-        if (data.features.length > 0) {
-          const wktPolygon = wellknown.stringify(data.features[0].geometry);
-          setWktPolygon(wktPolygon);
-          console.log(wktPolygon);
-        }
-      })
-      .catch((error) => console.error("Error loading GeoJSON:", error));
+    fetch('/selected_level_03.geojson') // File should be in the public folder
+      .then(response => response.json())
+      .then(data => setGeoJsonData(data))
+      .catch(error => console.error("Error loading GeoJSON:", error));
   }, []);
+
+  // Style settings for boundaries
+  const boundaryStyle = {
+    color: "#007BFF", // Blue outline
+    weight: 0.7,
+    opacity: 1,
+    fillColor: "#90CAF9", // Light blue fill
+    fillOpacity: 0.4,
+  };
+
 
   const [aoi, setAoi] = useState("Senegal");
   const [dataset, setDataset] = useState("NDVI");
@@ -77,7 +78,7 @@ export default function MapCanvas() {
         />
 
         {/* Render boundaries if GeoJSON is available */}
-        {geoJsonData && <GeoJSON data={geoJsonData} style={boundaryStyle} />}
+        {geoJsonData && <GeoJSON data={geoJsonData} style={boundaryStyle}/>}
       </MapContainer>
 
       {/* Display Selected Time */}
