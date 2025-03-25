@@ -4,6 +4,8 @@ import NavBar from './components/NavBar';
 import MenuPanel from './components/MenuPanel';
 import MapCanvas from './components/MapCanvas';
 import AnalysisPanel from './components/AnalysisPanel';
+import { MapProvider } from './components/MapContext';
+
 
 
 function App() {
@@ -15,11 +17,13 @@ function App() {
       <div className="container">
       
       <MenuPanel/>
-      <MapCanvas/>
-      <AnalysisPanel/>
+      <MapProvider>
+          <MapCanvas/>
+          <AnalysisPanel/>
+      </MapProvider>
+      
       </div>
-      {/* <BasicMap/>
-      <NDVIChart/> */}
+
     </div>
   );
 }
