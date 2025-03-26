@@ -93,7 +93,8 @@ export default function MapCanvas() {
      
       {/* Basemap Selector Dropdown */}
    
-      <MapContainer center={position} zoom={3} style={{ height: "100%", width: "100%" }}>
+      <MapContainer 
+      center={position} zoom={3} style={{ height: "100%", width: "100%" }}>
         {/* <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" /> */}
         <TileLayer url={selectedBasemap} />
         <WMSTileLayer

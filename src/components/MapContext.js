@@ -22,7 +22,7 @@ export const MapProvider = ({ children }) => {
     setFrequency(newFrequency);
     setYear(newYear);
     setMonth(newMonth);
-    setLayerKey((prevKey) => prevKey + 1); // Force re-render
+    
   };
 
    // Function to fetch Zonal Statistics
@@ -44,9 +44,15 @@ export const MapProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    fetchZonalStats();
-  }, [year]); // Fetch stats when any value changes   
+ // Trigger re-render when dataset, month, or year changes
+useEffect(() => {
+  setLayerKey((prevKey) => prevKey + 1);
+}, [aoi, dataset, month, year]);
+
+// Fetch stats only when the year changes
+useEffect(() => {
+  fetchZonalStats();
+}, [year]);
 
   return (
     <MapContext.Provider

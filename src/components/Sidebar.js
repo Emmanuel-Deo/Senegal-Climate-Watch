@@ -16,6 +16,8 @@ export default function Sidebar() {
         <option value="Garissa">Garissa</option>
       </select>
 
+      <p> {aoi}_{dataset}_{year}_{month}</p>
+
     </div>
   );
 }
