@@ -1,6 +1,6 @@
 import React from "react";
 import { useMapContext } from "./MapContext";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
@@ -8,16 +8,7 @@ const monthNames = [
 ];
 
 export default function AnalysisTop() {
-  const { month, year, setYear, dataset, stats } = useMapContext(); // Get context values
-  const selectedMonthName = monthNames[parseInt(month, 10) - 1]; // Convert to month name
-
-  // Convert stats object into an array for Recharts
-  const data = stats
-    ? Object.keys(stats).map((band, index) => ({
-        name: monthNames[index], // Use month names
-        mean: stats[band]?.mean || 0, // Ensure a fallback value
-      }))
-    : [];
+  const { month, year, setYear, dataset, ndviData } = useMapContext(); // Get context values
 
   return (
     <div className="analysis-top">
@@ -31,27 +22,14 @@ export default function AnalysisTop() {
         <button onClick={() => setYear((prev) => Number(prev) + 1)}>»</button>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
-        {stats && Object.keys(stats).length > 0 ? (
-          <LineChart data={data} margin={{ top: 50, right: 30, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" tick={{ fontSize: 12, fontFamily: "Arial", fill: "#333" }} />
-            <YAxis label={{ value: "Mean Values", angle: -90, position: "Left", fontSize: 12, fontWeight: "bold" }} />
-            <Tooltip />
-            <Legend />
-
-            {/* Highlight Selected Month with a Reference Line */}
-            <ReferenceLine x={selectedMonthName} stroke="red" strokeDasharray="3 3" label={{ value: selectedMonthName, position: "top", fill: "red" }} />
-
-            {/* Mean Lines */}
-            <Line type="monotone" dataKey="mean" stroke="#3385FF" strokeWidth={2} dot={{ r: 3 }} name="Mean (Raw)" />
-            <Line type="monotone" dataKey="meanLTM" stroke="#FF5733" strokeWidth={2} dot={{ r: 3 }} name="Mean (LTM)" />
-          </LineChart>
-        ) : (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-            <p>Loading...</p>
-          </div>
-        )}
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={ndviData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" />
+          <YAxis domain={[0, 1]} />
+          <Tooltip />
+          <Line type="monotone" dataKey="ndvi" stroke="#82ca9d" strokeWidth={2} dot={{ r: 5 }} />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

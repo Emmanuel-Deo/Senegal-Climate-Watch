@@ -38,11 +38,49 @@
 
 
 
-http://66.42.65.87:8080/geoserver/LANDSAT_NDVI_WET/wms?service=WMS
-&version=1.1.0
-&request=GetMap
-&layers=LANDSAT_NDVI_WET%3A2018
-&bbox=13.875377878510129%2C-26.520063817776517%2C36.47878705752554%2C-8.962491589660463
-&width=768
-&height=596
-&srs=EPSG%3A4326&styles=&format=image%2Fpng
+<?xml version="1.0" encoding="UTF-8"?><sld:StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:sld="http://www.opengis.net/sld" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" version="1.0.0">
+          <sld:NamedLayer>
+            <sld:Name>kenyadata:landcover_Kenya</sld:Name>
+            <sld:UserStyle>
+              <sld:Name>Landcover</sld:Name>
+              <sld:FeatureTypeStyle>
+                <sld:Name>Landconver</sld:Name>
+                <Transformation>
+          <ogc:Function name="gs:CropCoverage">
+                <ogc:Function name="parameter">
+                  <ogc:Literal>coverage</ogc:Literal>
+                </ogc:Function>
+                <ogc:Function name="parameter">
+                  <ogc:Literal>cropShape</ogc:Literal>
+                  <ogc:Literal>POLYGON((-14.45 14.49,-14.42 14.52,-14.40 14.50,-14.41 14.47,-14.44 14.45,-14.47 14.46,-14.48 14.48, -14.45 14.49))
+                  </ogc:Literal>
+                </ogc:Function>
+          </ogc:Function>
+        </Transformation>
+                <sld:Rule>
+                  <sld:RasterSymbolizer>
+                    <sld:ChannelSelection>
+                      <sld:GrayChannel>
+                        <sld:SourceChannelName>1</sld:SourceChannelName>
+                        <sld:ContrastEnhancement>
+                          <sld:GammaValue>1.0</sld:GammaValue>
+                        </sld:ContrastEnhancement>
+                      </sld:GrayChannel>
+                    </sld:ChannelSelection>
+                    <sld:ColorMap type="values">
+                      <sld:ColorMapEntry color="#0046c8" quantity="1" label="Water"/>
+                      <sld:ColorMapEntry color="#fff5d7" quantity="2" label="Bareland"/>
+                      <sld:ColorMapEntry color="#d7191c" quantity="3" label="Artificial "/>
+                      <sld:ColorMapEntry color="#33e9f6" quantity="4" label="Wetland"/>
+                      <sld:ColorMapEntry color="#f2fc83" quantity="5" label="Cropland"/>
+                      <sld:ColorMapEntry color="#f7ba02" quantity="6" label="Grassland"/>
+                      <sld:ColorMapEntry color="#007300" quantity="7" label="Forest"/>
+                    </sld:ColorMap>
+                    <sld:ContrastEnhancement/>
+                  </sld:RasterSymbolizer>
+                </sld:Rule>
+              </sld:FeatureTypeStyle>
+            </sld:UserStyle>
+          </sld:NamedLayer>
+        </sld:StyledLayerDescriptor>
+
