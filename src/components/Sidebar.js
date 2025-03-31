@@ -2,7 +2,7 @@ import React from "react";
 import { useMapContext } from "./MapContext";
 
 export default function Sidebar() {
-  const { dataset, setDataset, aoi, setAoi, month, year } = useMapContext();
+  const { dataset, setDataset, aoi, setAoi, month, year, frequency} = useMapContext();
 
   return (
     <div className="sidebar">
@@ -16,8 +16,7 @@ export default function Sidebar() {
         <option value="Garissa">Garissa</option>
       </select>
 
-      <p> {aoi}_{dataset}_{year}_{month}</p>
-
-    </div>
+      <p> {aoi}_{dataset}_{year}_{frequency}_{month}</p>
+     </div>
   );
 }

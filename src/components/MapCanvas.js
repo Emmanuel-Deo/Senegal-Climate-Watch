@@ -34,7 +34,7 @@ export default function MapCanvas() {
   const [selectedBasemap, setSelectedBasemap] = useState(basemaps[0].url);
 
   // Automatically switch SLD styles based on dataset value
-  const selectedStyle = dataset === "NDVI" ? "ndvi" : dataset === "PPT" ? "rainfall" : "default";
+  const selectedStyle = dataset === "NDVI" ? "ndvi" : dataset === "PPT" ? "ppt" : "default";
 
   useEffect(() => {
     fetch('/selected_level_03.geojson') 
@@ -107,6 +107,8 @@ export default function MapCanvas() {
           version="1.0"
           styles={selectedStyle}
         />
+
+
 
         {geoJsonData && <GeoJSON data={geoJsonData} style={{ color: "#007BFF", weight: 0.7, fillOpacity: 0.4 }}/>}
       </MapContainer>

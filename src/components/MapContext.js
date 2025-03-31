@@ -15,47 +15,43 @@ export const MapContext = createContext();
 // Context Provider Component
 export const MapProvider = ({ children }) => {
   const [aoi, setAoi] = useState("Senegal");
-  const [dataset, setDataset] = useState("NDVI");
+  const [dataset, setDataset] = useState("LST");
   const [frequency, setFrequency] = useState("MONTHLY");
   const [year, setYear] = useState("2003");
   const [month, setMonth] = useState("10");
   const [layerKey, setLayerKey] = useState(0); // For forcing re-render
   // const [stats, setStats] = useState(null);
 
-
-
   const [ndviData, setNdviData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
 
 
-  // Function to update values and refresh the map
-  const updateValues = (newAoi, newDataset, newFrequency, newYear, newMonth) => {
-    setAoi(newAoi);
-    setDataset(newDataset);
-    setFrequency(newFrequency);
-    setYear(newYear);
-    setMonth(newMonth);
-  };
-
-
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
 
   const fetchData = async () => {
+    const selectField = `${aoi.toLowerCase()}->${dataset.toLowerCase()}`;
     try {
         const { data, error } = await supabase
             .from('climate_data')
-            .select('month, bomet->ndvi') // ✅ Select month & NDVI from bomet
-            .eq('year', 2002) // ✅ Filter year = 2002
+            .select(`month, ${selectField}`) // ✅ Select month & NDVI from bomet
+            .eq('year', year) 
             .order('month', { ascending: true }); // ✅ Order by month
 
         if (error) throw error;
 
         // ✅ Format data for Recharts
-        const formattedData = data.map((item) => ({
-            month: `M${item.month}`, // Convert month to "M1", "M2", ..., "M12"
-            ndvi: item.ndvi ?? 0, // Ensure ndvi is valid (fallback to 0)
-        }));
+        const formattedData = data.map((item) => {
+          const selectedVariable = dataset.toLowerCase(); // Get the selected dataset name dynamically
+          return {
+              month: monthNames[item.month - 1], // Convert numeric month to full name
+              [selectedVariable]: item[selectedVariable] ?? 0, // Extract only the selected variable
+          };
+      });
 
         console.log("✅ NDVI Data:", formattedData);
         setNdviData(formattedData);
@@ -71,13 +67,6 @@ export const MapProvider = ({ children }) => {
 
 
 
-
-
-
-
-
-
-
  // Trigger re-render when dataset, month, or year changes
 useEffect(() => {
   setLayerKey((prevKey) => prevKey + 1);
@@ -85,10 +74,8 @@ useEffect(() => {
 
 
 useEffect(()=> {
-
   fetchData();
-
-},[year]);
+},[aoi, dataset, month, year]);
 
 
   return (
