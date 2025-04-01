@@ -88,6 +88,8 @@ border-top-left-radius: 10px;
 width: 100%;
 align-items: center;
 overflow: hidden;
+justify-content: center;
+text-align: center;
 
 }
 
@@ -280,4 +282,10 @@ overflow: hidden;
 .sidebar select {
   width: 100%;
   padding: 8px;
+}
+
+
+.chart-container {
+  margin: 10px;
+  background-color: aquamarine;
 }
