@@ -74,9 +74,7 @@ export default function AnalysisTop() {
   return (
     <div className="analysis-top">
       <h2>Monthly Mean Data Analysis</h2>
-      <h3>{dataset}</h3>
-      <h3>{year}</h3>
-      <h3>{month}</h3>
+      <h3>{dataset} {year} {month}</h3>
 
       {/* Year Selector */}
       <div className="year-selector">

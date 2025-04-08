@@ -5,10 +5,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = 'https://gyjbkzxtsxbpwjmbvilm.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5amJrenh0c3hicHdqbWJ2aWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyNDgzMzYsImV4cCI6MjA1NTgyNDMzNn0.7leWFkGhmI8Wo71P87K7xsNGJAmTRQ7mIeL_FO6wzx0';
-
 const supabase = createClient(  supabaseUrl,  supabaseAnonKey);
-
-
 
 // Create Context
 export const MapContext = createContext();
