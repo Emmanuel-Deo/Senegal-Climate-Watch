@@ -15,7 +15,7 @@ export const MapProvider = ({ children }) => {
   const [aoi, setAoi] = useState("Bomet");
   const [dataset, setDataset] = useState("LST");
   const [frequency, setFrequency] = useState("MONTHLY");
-  const [year, setYear] = useState("2003");
+  const [year, setYear] = useState("2020");
   const [month, setMonth] = useState("10");
   const [layerKey, setLayerKey] = useState(0);
 
@@ -23,6 +23,9 @@ export const MapProvider = ({ children }) => {
   const [ltm, setLtm] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const [maxData, setMaxData] = useState({}); // For storing max values
+  const [minData, setMinData] = useState({}); // For storing min values
 
   const monthNames = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -77,11 +80,68 @@ export const MapProvider = ({ children }) => {
     }
   };
 
+
+  const fetchMinMaxData = async () => {
+    const currentYear = parseInt(year, 10);
+    const startYear = currentYear - 5;
+    const endYear = currentYear - 1;
+    const selectField = `${aoi.toLowerCase()}->${dataset.toLowerCase()}`;
+  
+    setLoading(true);
+  
+    try {
+      // Fetch climate data for the past 5 years
+      const { data: climateData, error } = await supabase
+        .from("climate_data")
+        .select(`month, year, ${selectField}`)
+        .in("year", Array.from({ length: 5 }, (_, i) => startYear + i))
+        .order("month", { ascending: true });
+  
+      if (error) throw error;
+  
+      // Group data by month
+      const monthlyStats = monthNames.map((monthName, index) => {
+        const month = index + 1;
+        const monthlyData = climateData.filter(item => item.month === month);
+        const values = monthlyData.map(item => item[dataset.toLowerCase()] ?? null).filter(val => val !== null);
+  
+        const minVal = values.length ? Math.min(...values) : null;
+        const maxVal = values.length ? Math.max(...values) : null;
+  
+        return {
+          month,
+          [dataset.toLowerCase()]: minVal,
+          max: maxVal,
+        };
+      });
+  
+      // Create formatted arrays for min and max values
+      const minFormatted = formatData(monthlyStats.map(({ month, ...rest }) => ({ month, [dataset.toLowerCase()]: rest[dataset.toLowerCase()] })), "min");
+      const maxFormatted = formatData(monthlyStats.map(({ month, ...rest }) => ({ month, [dataset.toLowerCase()]: rest.max })), "max");
+  
+      // Set state for min and max data
+      setMinData(minFormatted);
+      setMaxData(maxFormatted);
+  
+      console.log("✅ startYear:", startYear);
+      console.log("✅ endYear:", endYear);
+  
+    } catch (err) {
+      console.error("❌ Fetch Min/Max Error:", err.message);
+      setErrorMessage("Failed to fetch min/max data.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Trigger re-render and refetch when dependencies change
   useEffect(() => {
-    setLayerKey((prevKey) => prevKey + 1);
+    // Re-fetch data and trigger changes when necessary
+    setLayerKey((prevKey) => prevKey + 1);  // Increments the key to re-render the map layer
     fetchData();
+    fetchMinMaxData();
   }, [aoi, dataset, month, year]);
+  
 
   return (
     <MapContext.Provider
@@ -95,7 +155,11 @@ export const MapProvider = ({ children }) => {
         absolute, setAbsolute,
         ltm, setLtm,
         fetchData,
-        loading
+        maxData, // Provide max data
+        minData, // Provide min data
+        loading,
+        errorMessage,
+
       }}
     >
       {children}
