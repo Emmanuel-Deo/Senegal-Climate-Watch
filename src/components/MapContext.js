@@ -1,100 +1,104 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-
 import { createClient } from "@supabase/supabase-js";
 
 // Initialize Supabase client
-const supabase = createClient(
-    'https://gyjbkzxtsxbpwjmbvilm.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5amJrenh0c3hicHdqbWJ2aWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyNDgzMzYsImV4cCI6MjA1NTgyNDMzNn0.7leWFkGhmI8Wo71P87K7xsNGJAmTRQ7mIeL_FO6wzx0' // 🔒 Replace with a secure environment variable
-);
+
+const supabaseUrl = 'https://gyjbkzxtsxbpwjmbvilm.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd5amJrenh0c3hicHdqbWJ2aWxtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAyNDgzMzYsImV4cCI6MjA1NTgyNDMzNn0.7leWFkGhmI8Wo71P87K7xsNGJAmTRQ7mIeL_FO6wzx0';
+
+const supabase = createClient(  supabaseUrl,  supabaseAnonKey);
+
+
 
 // Create Context
 export const MapContext = createContext();
 
 // Context Provider Component
 export const MapProvider = ({ children }) => {
-  const [aoi, setAoi] = useState("Senegal");
+  const [aoi, setAoi] = useState("Bomet");
   const [dataset, setDataset] = useState("LST");
   const [frequency, setFrequency] = useState("MONTHLY");
   const [year, setYear] = useState("2003");
   const [month, setMonth] = useState("10");
-  const [layerKey, setLayerKey] = useState(0); // For forcing re-render
-  // const [stats, setStats] = useState(null);
+  const [layerKey, setLayerKey] = useState(0);
 
-  const [ndviData, setNdviData] = useState([]);
+  const [absolute, setAbsolute] = useState([]);
+  const [ltm, setLtm] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
-
 
   const monthNames = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
 
+  const formatData = (data, sourceName) => {
+    const selectedVariable = dataset.toLowerCase();
+    return data.map((item) => ({
+      month: monthNames[item.month - 1],
+      [selectedVariable]: item[selectedVariable] ?? 0,
+      source: sourceName
+    }));
+  };
 
   const fetchData = async () => {
     const selectField = `${aoi.toLowerCase()}->${dataset.toLowerCase()}`;
+    setLoading(true);
+
     try {
-        const { data, error } = await supabase
-            .from('climate_data')
-            .select(`month, ${selectField}`) // ✅ Select month & NDVI from bomet
-            .eq('year', year) 
-            .order('month', { ascending: true }); // ✅ Order by month
+      // Fetch climate_data (observation)
+      const { data: obsData, error: obsError } = await supabase
+        .from("climate_data")
+        .select(`month, ${selectField}`)
+        .eq("year", year)
+        .order("month", { ascending: true });
 
-        if (error) throw error;
+      if (obsError) throw obsError;
 
-        // ✅ Format data for Recharts
-        const formattedData = data.map((item) => {
-          const selectedVariable = dataset.toLowerCase(); // Get the selected dataset name dynamically
-          return {
-              month: monthNames[item.month - 1], // Convert numeric month to full name
-              [selectedVariable]: item[selectedVariable] ?? 0, // Extract only the selected variable
-          };
-      });
+      const formattedObs = formatData(obsData, "observation");
+      setAbsolute(formattedObs);
 
-        console.log("✅ NDVI Data:", formattedData);
-        setNdviData(formattedData);
+      // Fetch climate_data_ltm (long-term mean)
+      const { data: ltmData, error: ltmError } = await supabase
+        .from("climate_data_ltm")
+        .select(`month, ${selectField}`)
+        .order("month", { ascending: true });
+
+      if (ltmError) throw ltmError;
+
+      const formattedLtm = formatData(ltmData, "ltm");
+      setLtm(formattedLtm);
+
+      console.log("✅ Observation:", formattedObs);
+      console.log("✅ LTM:", formattedLtm);
+
     } catch (err) {
-        console.error("❌ Fetch Error:", err.message);
-        setErrorMessage("Failed to fetch NDVI data.");
+      console.error("❌ Fetch Error:", err.message);
+      setErrorMessage("Failed to fetch data.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
-
-
-
-
- // Trigger re-render when dataset, month, or year changes
-useEffect(() => {
-  setLayerKey((prevKey) => prevKey + 1);
-}, [aoi, dataset, month, year]);
-
-
-useEffect(()=> {
-  fetchData();
-},[aoi, dataset, month, year]);
-
+  // Trigger re-render and refetch when dependencies change
+  useEffect(() => {
+    setLayerKey((prevKey) => prevKey + 1);
+    fetchData();
+  }, [aoi, dataset, month, year]);
 
   return (
     <MapContext.Provider
       value={{
-        aoi,
-        setAoi,
-        dataset,
-        setDataset,
-        frequency,
-        setFrequency,
-        year,
-        setYear,
-        month,
-        setMonth,
+        aoi, setAoi,
+        dataset, setDataset,
+        frequency, setFrequency,
+        year, setYear,
+        month, setMonth,
         layerKey,
-        ndviData,
+        absolute, setAbsolute,
+        ltm, setLtm,
         fetchData,
-        loading // Expose loading state
+        loading
       }}
     >
       {children}
@@ -102,5 +106,5 @@ useEffect(()=> {
   );
 };
 
-// Custom Hook to Use Context
+// Custom Hook
 export const useMapContext = () => useContext(MapContext);

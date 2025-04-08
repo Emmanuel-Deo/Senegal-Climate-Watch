@@ -90,6 +90,10 @@ export default function MapCanvas() {
         ))}
       </div>
 
+
+      <img src="http://localhost:8080/geoserver/demo/wms?service=WMS&version=1.1.1&request=GetLegendGraphic&layer=Senegal_NDVI_2004_MONTHLY_2&style=ndvi&format=image/png" alt="Legend"/>
+
+
      
       {/* Basemap Selector Dropdown */}
    
@@ -113,16 +117,18 @@ export default function MapCanvas() {
         {geoJsonData && <GeoJSON data={geoJsonData} style={{ color: "#007BFF", weight: 0.7, fillOpacity: 0.4 }}/>}
       </MapContainer>
 
-         {/* Display Selected Time */}
-         <div className="map-time">
-        <MapControls/>
-      </div>
+          {/* Display Selected Time */}
+          <div className="map-time">
+          <MapControls/>
+        </div>
 
-      {/* Opacity Slider */}
-      <div className="opacity-slider">
+        {/* Opacity Slider */}
+        <div className="opacity-slider">
         <label>Opacity: {Math.round(opacity * 100)}%</label>
         <input type="range" min="0" max="1" step="0.01" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} />
       </div>
+
+
     </div>
   );
 }

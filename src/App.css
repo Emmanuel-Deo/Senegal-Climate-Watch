@@ -79,19 +79,23 @@ background-color:rgb(238, 238, 238);
 
 }
 
-.analysis-top{
-
-background-color:rgb(238, 238, 238);
-height: 70%;
-border-top-right-radius: 10px;
-border-top-left-radius: 10px;
-width: 100%;
-align-items: center;
-overflow: hidden;
-justify-content: center;
-text-align: center;
+.analysis-top {
+  background-color: rgb(238, 238, 238);
+  height: 70%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow-y: auto; /* Enables vertical scrolling if content exceeds the height */
+  padding: 10px; /* Optional, adds padding to the content */
+}
+.chart-description{
+  text-align: justify;
 
 }
+
 
 .analysis-bottom{
   background-color:rgb(238, 238, 238);
