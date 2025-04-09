@@ -91,7 +91,7 @@ export default function MapCanvas() {
       </div>
 
 
-      <img src="http://localhost:8080/geoserver/demo/wms?service=WMS&version=1.1.1&request=GetLegendGraphic&layer=Senegal_NDVI_2004_MONTHLY_2&style=ndvi&format=image/png" alt="Legend"/>
+
 
 
      
@@ -126,6 +126,24 @@ export default function MapCanvas() {
         <div className="opacity-slider">
         <label>Opacity: {Math.round(opacity * 100)}%</label>
         <input type="range" min="0" max="1" step="0.01" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} />
+
+      </div>
+      <div>
+              <img
+  src={`http://localhost:8080/geoserver/demo/wms?service=WMS&version=1.1.1&request=GetLegendGraphic&layer=demo:${aoi}_${dataset}_${year}_${frequency}_${month}&style=${selectedStyle}&format=image/png`}
+  alt="Legend"
+  style={{
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    background: "white",
+    padding: "5px",
+    borderRadius: "5px",
+    zIndex: 1000,
+    width: "150px", // Fixed width
+    // height: "auto", // Auto height to maintain aspect ratio
+  }}
+/>
       </div>
 
 

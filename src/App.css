@@ -291,3 +291,24 @@ background-color:rgb(238, 238, 238);
   margin: 10px;
   background-color: aquamarine;
 }
+
+
+.sidebar .dataset-buttons button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  background-color: #414141;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sidebar .dataset-buttons button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.sidebar .dataset-buttons button:hover {
+  background-color: #e0e0e0;
+}
