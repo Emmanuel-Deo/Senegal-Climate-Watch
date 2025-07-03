@@ -14,6 +14,7 @@ const basemaps = [
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     thumbnail: "https://www.freeiconspng.com/thumbs/links-icon/links-icon-16.png"
   },
+  
   {
     name: "OpenStreetMap",
     url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -34,10 +35,10 @@ export default function MapCanvas() {
   const [selectedBasemap, setSelectedBasemap] = useState(basemaps[0].url);
 
   // Automatically switch SLD styles based on dataset value
-  const selectedStyle = dataset === "NDVI" ? "ndvi" : dataset === "PPT" ? "ppt" : "default";
+  const selectedStyle = dataset === "NDVI" ? "NDVI" : dataset === "PPT" ? "PPT" : "default";
 
   useEffect(() => {
-    fetch('/selected_level_03.geojson') 
+    fetch('/level_03.geojson') 
       .then(response => response.json())
       .then(data => setGeoJsonData(data))
       .catch(error => console.error("Error loading GeoJSON:", error));

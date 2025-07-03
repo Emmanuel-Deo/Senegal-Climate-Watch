@@ -24,6 +24,7 @@ const monthNames = [
 
 export default function AnalysisTop() {
   const {
+    aoi,
     month,
     year,
     setYear,
@@ -105,7 +106,7 @@ export default function AnalysisTop() {
   return (
     <div className="analysis-top">
       {/* <h2>Monthly Mean Data Analysis</h2> */}
-      <h3>{dataset} {year} {month}</h3>
+      <h3>{aoi} {dataset} {year} {month}</h3>
 
       {/* Year Selector */}
       <div className="year-selector">

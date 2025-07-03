@@ -12,11 +12,11 @@ export const MapContext = createContext();
 
 // Context Provider Component
 export const MapProvider = ({ children }) => {
-  const [aoi, setAoi] = useState("Bomet");
-  const [dataset, setDataset] = useState("LST");
+  const [aoi, setAoi] = useState("Garissa");
+  const [dataset, setDataset] = useState("PPT");
   const [frequency, setFrequency] = useState("MONTHLY");
-  const [year, setYear] = useState("2020");
-  const [month, setMonth] = useState("10");
+  const [year, setYear] = useState("2001");
+  const [month, setMonth] = useState("3");
   const [layerKey, setLayerKey] = useState(0);
 
   const [absolute, setAbsolute] = useState([]);
