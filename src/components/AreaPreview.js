@@ -16,24 +16,21 @@ export default function AreaPreview() {
   }, []);
 
  
-
   const highlightStyle = {
-  color: "#222222",
-  weight: 2,
+  color: "#838383",
+  weight: 1.2,
   opacity: 1,
-  fillColor: "#555555",
-  fillOpacity: 0.6,
+  fillColor: "#000000",
+  fillOpacity: 0.4,
 };
 
 const backgroundStyle = {
   color: "#999999",
-  weight: 0.5,
+  weight: 1.2,
   opacity: 0.4,
-  fillColor: "#cccccc",
-  fillOpacity: 0.2,
+  fillColor: "#656565",
+  fillOpacity: 0.25,
 };
-
-
 
 
   function styleFeature(feature) {
@@ -63,7 +60,11 @@ const backgroundStyle = {
         style={{ height: "calc(100% - 80px)", width: "100%" }}
         zoomControl={false}
       >
-        <TileLayer url='https://tile.openstreetmap.org/{z}/{x}/{y}.png' />
+        <TileLayer
+  url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+/>
+
 
         {geoJsonData && <GeoJSON data={geoJsonData} style={styleFeature} />}
       </MapContainer>
